@@ -5,9 +5,10 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.Nullable;
 import space.devport.utils.commands.struct.ArgumentRange;
 import space.devport.utils.commands.struct.CommandResult;
-import space.devport.utils.text.StringUtil;
+import space.devport.utils.text.message.Message;
 import space.devport.wertik.badges.BadgePlugin;
 import space.devport.wertik.badges.commands.BadgeSubCommand;
+import space.devport.wertik.badges.system.badge.struct.Badge;
 import space.devport.wertik.badges.system.user.struct.User;
 
 public class ListSubCommand extends BadgeSubCommand {
@@ -27,15 +28,23 @@ public class ListSubCommand extends BadgeSubCommand {
         User user = plugin.getUserManager().getOrCreateUser(target.getUniqueId());
 
         if (user.getCollectedBadges().isEmpty()) {
-            //TODO
-            sender.sendMessage(StringUtil.color("&cUser has not badges collected."));
+            language.getPrefixed(target == sender ? "Commands.No-Badges" : "Commands.No-Badges-Others")
+                    .replace("%player%", target.getName())
+                    .send(sender);
             return CommandResult.FAILURE;
         }
 
-        //TODO
-        StringBuilder list = new StringBuilder("&8&m    &6 Collected Badges");
-        user.getBadges().forEach(b -> list.append("\n&8 - &f%displayName%".replace("%displayName%", b.getDisplayName())));
-        sender.sendMessage(StringUtil.color(list.toString()));
+        Message list = language.get("Commands.List.Header");
+        String lineFormat = language.get("Commands.List.Line").toString();
+
+        for (Badge badge : user.getBadges()) {
+            list.append(new Message(lineFormat)
+                    .replace("%badgeDisplay%", badge.getDisplayName())
+                    .replace("%name%", badge.getName()).toString());
+        }
+
+        list.replace("%count%", user.getCollectedBadges().size())
+                .send(sender);
         return CommandResult.SUCCESS;
     }
 

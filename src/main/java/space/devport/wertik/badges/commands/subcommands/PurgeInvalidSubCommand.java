@@ -4,7 +4,6 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.Nullable;
 import space.devport.utils.commands.struct.ArgumentRange;
 import space.devport.utils.commands.struct.CommandResult;
-import space.devport.utils.text.StringUtil;
 import space.devport.wertik.badges.BadgePlugin;
 import space.devport.wertik.badges.commands.BadgeSubCommand;
 
@@ -16,13 +15,11 @@ public class PurgeInvalidSubCommand extends BadgeSubCommand {
 
     @Override
     protected CommandResult perform(CommandSender sender, String label, String[] args) {
-        //TODO
-        sender.sendMessage(StringUtil.color("&7Starting..."));
-        plugin.getUserManager().purgeInvalid().thenAcceptAsync((count) -> {
-            //TODO
-            sender.sendMessage(StringUtil.color("&7Removed &f%count% &7invalid badge references."
-                    .replace("%count%", String.valueOf(count))));
-        });
+        language.sendPrefixed(sender, "Commands.Purge-Invalid.Starting");
+        plugin.getUserManager().purgeInvalid().thenAcceptAsync((count) ->
+                language.getPrefixed("Commands.Purge-Invalid.Done")
+                        .replace("%count%", count)
+                        .send(sender));
         return CommandResult.SUCCESS;
     }
 

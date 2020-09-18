@@ -5,7 +5,6 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.Nullable;
 import space.devport.utils.commands.struct.ArgumentRange;
 import space.devport.utils.commands.struct.CommandResult;
-import space.devport.utils.text.StringUtil;
 import space.devport.wertik.badges.BadgePlugin;
 import space.devport.wertik.badges.commands.BadgeSubCommand;
 import space.devport.wertik.badges.system.badge.struct.Badge;
@@ -28,15 +27,19 @@ public class AddSubCommand extends BadgeSubCommand {
         Badge badge = plugin.getBadgeManager().getBadge(args[0]);
 
         if (badge == null) {
-            //TODO
-            sender.sendMessage(StringUtil.color("&cInvalid badge."));
+            language.getPrefixed("Commands.Invalid-Badge")
+                    .replace("%param%", args[0])
+                    .send(sender);
             return CommandResult.FAILURE;
         }
 
         User user = plugin.getUserManager().getOrCreateUser(target.getUniqueId());
         user.addBadge(badge);
-        //TODO
-        sender.sendMessage(StringUtil.color("&7Added the badge."));
+        language.getPrefixed(target == sender ? "Commands.Add.Done" : "Commands.Add.Done-Others")
+                .replace("%badge%", badge.getName())
+                .replace("%badgeDisplay%", badge.getDisplayName())
+                .replace("%player%", target.getName())
+                .send(sender);
         return CommandResult.SUCCESS;
     }
 

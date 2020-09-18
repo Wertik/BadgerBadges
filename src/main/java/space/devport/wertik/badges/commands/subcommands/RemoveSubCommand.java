@@ -5,9 +5,9 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.Nullable;
 import space.devport.utils.commands.struct.ArgumentRange;
 import space.devport.utils.commands.struct.CommandResult;
-import space.devport.utils.text.StringUtil;
 import space.devport.wertik.badges.BadgePlugin;
 import space.devport.wertik.badges.commands.BadgeSubCommand;
+import space.devport.wertik.badges.system.badge.struct.Badge;
 import space.devport.wertik.badges.system.user.struct.User;
 
 public class RemoveSubCommand extends BadgeSubCommand {
@@ -24,14 +24,21 @@ public class RemoveSubCommand extends BadgeSubCommand {
 
         User user = plugin.getUserManager().getOrCreateUser(target.getUniqueId());
         if (!user.hasBadge(args[0])) {
-            //TODO
-            sender.sendMessage(StringUtil.color("&cPlayer doesn't have this badge."));
+            language.getPrefixed(target == sender ? "Commands.Does-Not-Have" : "Commands.Does-Not-Have-Others")
+                    .replace("%player%", target.getName())
+                    .send(sender);
             return CommandResult.FAILURE;
         }
 
-        //TODO
-        sender.sendMessage(StringUtil.color("&7Badge removed."));
         user.removeBadge(args[0]);
+
+        Badge badge = plugin.getBadgeManager().getBadge(args[0]);
+
+        language.getPrefixed(sender == target ? "Commands.Remove.Done" : "Commands.Remove.Done-Others")
+                .replace("%badge%", badge.getName())
+                .replace("%badgeDisplay%", badge.getDisplayName())
+                .replace("%player%", target.getName())
+                .send(sender);
         return CommandResult.SUCCESS;
     }
 
