@@ -1,0 +1,7 @@
+name: ${project.name}
+main: ${project.groupId}.BadgePlugin
+version: ${project.version}
+authors: [ Wertik1206 ]
+commands:
+  badgerbadges:
+    aliases: [ bb, badge, badges, badgerbadge ]

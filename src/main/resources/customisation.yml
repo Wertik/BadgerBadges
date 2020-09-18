@@ -1,0 +1,33 @@
+# Customisation for ${project.name}
+#
+# Version: ${project.version}
+
+menus:
+  collection:
+    title: '&7Your Badge Collection'
+    matrix:
+      - '         '
+      - ' xxxxxxx '
+      - '         '
+      - '  p c n  '
+    items:
+      page-previous:
+        name: '&7<< Previous page'
+        type: ARROW
+        matrix-char: 'p'
+      page-next:
+        name: '&7Next >>'
+        type: ARROW
+        matrix-char: 'n'
+      close:
+        name: '&cClose'
+        type: IRON_DOOR
+        matrix-char: 'c'
+
+items:
+  default-badge-display:
+    name: '&7Badge: %displayName%'
+    type: WOODEN_SWORD
+  default-not-collected-display:
+    name: '&cBadge: %displayName%'
+    type: BARRIER

@@ -1,0 +1,16 @@
+# Badge configuration for ${project.name}
+#
+# Version: $[project.version}
+
+badge-survivor:
+  display-name: '&6Survivor'
+  display-item:
+    type: WOODEN_SWORD
+    name: '&6Survivor Badge'
+    lore:
+      - '&7Claimed for surviving the first night!'
+  not-collected:
+    type: IRON_DOOR
+    name: "&cSurvivor badge, a badge you don't have"
+    lore:
+      - "&7The coolest badge of all the badges and you don't have it."
