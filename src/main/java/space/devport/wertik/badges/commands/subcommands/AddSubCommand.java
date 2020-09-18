@@ -20,7 +20,7 @@ public class AddSubCommand extends BadgeSubCommand {
     @Override
     protected CommandResult perform(CommandSender sender, String label, String[] args) {
 
-        OfflinePlayer target = plugin.getCommandParser().parseTarget(sender, args);
+        OfflinePlayer target = plugin.getCommandParser().parseTarget(sender, args.length > 1 ? args[0] : null);
 
         if (target == null)
             return CommandResult.NO_CONSOLE;

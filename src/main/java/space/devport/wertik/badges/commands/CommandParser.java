@@ -16,10 +16,10 @@ public class CommandParser {
     }
 
     @Nullable
-    public OfflinePlayer parseTarget(CommandSender sender, String[] args) {
+    public OfflinePlayer parseTarget(CommandSender sender, String arg) {
         OfflinePlayer target;
-        if (args.length > 1) {
-            target = Bukkit.getOfflinePlayer(args[1]);
+        if (arg != null) {
+            target = Bukkit.getOfflinePlayer(arg.trim());
         } else {
             if (!(sender instanceof Player))
                 return null;

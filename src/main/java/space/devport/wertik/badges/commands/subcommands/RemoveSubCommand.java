@@ -18,12 +18,12 @@ public class RemoveSubCommand extends BadgeSubCommand {
 
     @Override
     protected CommandResult perform(CommandSender sender, String label, String[] args) {
-        OfflinePlayer target = plugin.getCommandParser().parseTarget(sender, args);
+        OfflinePlayer target = plugin.getCommandParser().parseTarget(sender, args.length > 1 ? args[0] : null);
 
         if (target == null) return CommandResult.NO_CONSOLE;
 
         User user = plugin.getUserManager().getOrCreateUser(target.getUniqueId());
-        if (!user.hasBadge(args[1])) {
+        if (!user.hasBadge(args[0])) {
             //TODO
             sender.sendMessage(StringUtil.color("&cPlayer doesn't have this badge."));
             return CommandResult.FAILURE;
@@ -31,7 +31,7 @@ public class RemoveSubCommand extends BadgeSubCommand {
 
         //TODO
         sender.sendMessage(StringUtil.color("&7Badge removed."));
-        user.removeBadge(args[1]);
+        user.removeBadge(args[0]);
         return CommandResult.SUCCESS;
     }
 
