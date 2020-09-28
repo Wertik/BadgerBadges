@@ -45,6 +45,7 @@ public class CollectionSubCommand extends BadgeSubCommand {
 
         Player player = (Player) sender;
         new CollectionMenu(plugin, player, user)
+                .archive(target.getUniqueId().equals(player.getUniqueId()))
                 .open(player);
         return CommandResult.SUCCESS;
     }

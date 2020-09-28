@@ -11,6 +11,9 @@ import space.devport.wertik.badges.commands.BadgeSubCommand;
 import space.devport.wertik.badges.system.badge.struct.Badge;
 import space.devport.wertik.badges.system.user.struct.User;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AddSubCommand extends BadgeSubCommand {
 
     public AddSubCommand(BadgePlugin plugin) {
@@ -41,6 +44,14 @@ public class AddSubCommand extends BadgeSubCommand {
         language.getPrefixed(target == sender ? "Commands.Add.Done" : "Commands.Add.Done-Others")
                 .send(sender, context.add(badge));
         return CommandResult.SUCCESS;
+    }
+
+    @Override
+    public List<String> requestTabComplete(CommandSender sender, String[] args) {
+        if (args.length == 1) {
+            return new ArrayList<>(plugin.getBadgeManager().getLoadedBadges().keySet());
+        }
+        return new ArrayList<>();
     }
 
     @Override

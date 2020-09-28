@@ -1,5 +1,6 @@
 package space.devport.wertik.badges.commands.subcommands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.Nullable;
@@ -9,7 +10,12 @@ import space.devport.utils.struct.Context;
 import space.devport.wertik.badges.BadgePlugin;
 import space.devport.wertik.badges.commands.BadgeSubCommand;
 import space.devport.wertik.badges.system.badge.struct.Badge;
+import space.devport.wertik.badges.system.user.struct.CollectedBadge;
 import space.devport.wertik.badges.system.user.struct.User;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class RemoveSubCommand extends BadgeSubCommand {
 
@@ -37,6 +43,16 @@ public class RemoveSubCommand extends BadgeSubCommand {
         language.getPrefixed(sender == target ? "Commands.Remove.Done" : "Commands.Remove.Done-Others")
                 .send(sender, context.add(badge));
         return CommandResult.SUCCESS;
+    }
+
+    @Override
+    public List<String> requestTabComplete(CommandSender sender, String[] args) {
+        if (args.length == 1) {
+            User user = plugin.getUserManager().getUser(Bukkit.getOfflinePlayer(args[0]).getUniqueId());
+            if (user != null)
+                return user.getCollectedBadges().stream().map(CollectedBadge::getBadgeName).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
     }
 
     @Override

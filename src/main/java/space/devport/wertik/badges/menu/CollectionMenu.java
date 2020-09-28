@@ -1,5 +1,6 @@
 package space.devport.wertik.badges.menu;
 
+import lombok.Getter;
 import org.bukkit.entity.Player;
 import space.devport.utils.CustomisationManager;
 import space.devport.utils.item.ItemBuilder;
@@ -28,6 +29,14 @@ public class CollectionMenu extends Menu {
     private final int slotsPerPage;
 
     private int page = 1;
+
+    @Getter
+    private boolean archive = true;
+
+    public CollectionMenu archive(boolean bool) {
+        this.archive = bool;
+        return this;
+    }
 
     public CollectionMenu(BadgePlugin plugin, Player player) {
         this(plugin, player, plugin.getUserManager().getOrCreateUser(player.getUniqueId()));
