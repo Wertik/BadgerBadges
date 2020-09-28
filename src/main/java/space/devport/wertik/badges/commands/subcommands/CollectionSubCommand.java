@@ -33,15 +33,7 @@ public class CollectionSubCommand extends BadgeSubCommand {
             target = (Player) sender;
         }
 
-        User user = plugin.getUserManager().getUser(target.getUniqueId());
-
-        Context context = new Context(user).fromPlayer(target);
-
-        if (user == null) {
-            language.getPrefixed("Commands.No-Badges-Others")
-                    .send(sender, context);
-            return CommandResult.FAILURE;
-        }
+        User user = plugin.getUserManager().getOrCreateUser(target.getUniqueId());
 
         Player player = (Player) sender;
         new CollectionMenu(plugin, player, user)

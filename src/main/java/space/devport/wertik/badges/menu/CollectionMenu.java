@@ -8,7 +8,6 @@ import space.devport.utils.menu.Menu;
 import space.devport.utils.menu.MenuBuilder;
 import space.devport.utils.menu.item.MatrixItem;
 import space.devport.utils.menu.item.MenuItem;
-import space.devport.utils.struct.Context;
 import space.devport.utils.text.Placeholders;
 import space.devport.wertik.badges.BadgePlugin;
 import space.devport.wertik.badges.system.badge.struct.Badge;
@@ -79,6 +78,9 @@ public class CollectionMenu extends Menu {
 
             Badge badge = badges.get(i);
 
+            if (plugin.getConfig().getBoolean("separate-gui", false) && !user.hasBadge(badge))
+                continue;
+
             ItemBuilder item = user.hasBadge(badge) || !notCollectedDisplay ? badge.getDisplayItem() : badge.getNotCollectedItem();
 
             if (user.hasBadge(badge)) {
@@ -96,7 +98,7 @@ public class CollectionMenu extends Menu {
 
         // Archive
 
-        if (menuBuilder.getItem("archive") != null && plugin.getConfig().getBoolean("separate-gui", false))
+        if (archive && menuBuilder.getItem("archive") != null && plugin.getConfig().getBoolean("separate-gui", false))
             menuBuilder.getItem("archive").setClickAction(itemClick -> {
                 new ArchiveMenu(plugin, player).open(player);
             });
