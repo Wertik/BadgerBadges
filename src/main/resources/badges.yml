@@ -8,6 +8,7 @@ badge-survivor:
     type: WOODEN_SWORD
     name: '&6Survivor Badge'
     lore:
+      - '&7Collected: &f%collectedDate%'
       - '&7Claimed for surviving the first night!'
   not-collected:
     type: IRON_DOOR

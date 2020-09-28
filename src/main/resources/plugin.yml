@@ -5,3 +5,7 @@ authors: [ Wertik1206 ]
 commands:
   badgerbadges:
     aliases: [ bb, badge, badges, badgerbadge ]
+
+permissions:
+  badgerbadges.view.others:
+    description: View badges of other players.

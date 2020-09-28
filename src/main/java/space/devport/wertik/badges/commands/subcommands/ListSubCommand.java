@@ -27,7 +27,7 @@ public class ListSubCommand extends BadgeSubCommand {
 
         User user = plugin.getUserManager().getOrCreateUser(target.getUniqueId());
 
-        if (user.getCollectedBadges().isEmpty()) {
+        if (user.getBadges().isEmpty()) {
             language.getPrefixed(target == sender ? "Commands.No-Badges" : "Commands.No-Badges-Others")
                     .replace("%player%", target.getName())
                     .send(sender);
@@ -43,7 +43,7 @@ public class ListSubCommand extends BadgeSubCommand {
                     .replace("%name%", badge.getName()).toString());
         }
 
-        list.replace("%count%", user.getCollectedBadges().size())
+        list.replace("%count%", user.getBadges().size())
                 .send(sender);
         return CommandResult.SUCCESS;
     }

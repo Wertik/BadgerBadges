@@ -9,19 +9,18 @@ import space.devport.utils.commands.struct.ArgumentRange;
 import space.devport.utils.commands.struct.CommandResult;
 import space.devport.wertik.badges.BadgePlugin;
 import space.devport.wertik.badges.commands.BadgeSubCommand;
-import space.devport.wertik.badges.menu.CollectionMenu;
+import space.devport.wertik.badges.menu.ArchiveMenu;
 import space.devport.wertik.badges.system.user.struct.User;
 
-public class CollectionSubCommand extends BadgeSubCommand {
+public class ArchiveSubCommand extends BadgeSubCommand {
 
-    public CollectionSubCommand(BadgePlugin plugin) {
-        super("collection", plugin);
+    public ArchiveSubCommand(BadgePlugin plugin) {
+        super("archive", plugin);
         this.preconditions.playerOnly();
     }
 
     @Override
     protected CommandResult perform(CommandSender sender, String label, String[] args) {
-
         OfflinePlayer target;
         if (args.length > 0) {
             target = Bukkit.getOfflinePlayer(args[0]);
@@ -42,19 +41,19 @@ public class CollectionSubCommand extends BadgeSubCommand {
         }
 
         Player player = (Player) sender;
-        new CollectionMenu(plugin, player, user)
+        new ArchiveMenu(plugin, player, user)
                 .open(player);
         return CommandResult.SUCCESS;
     }
 
     @Override
     public @Nullable String getDefaultUsage() {
-        return "/%label% collection (player)";
+        return "/%label% archive (player)";
     }
 
     @Override
     public @Nullable String getDefaultDescription() {
-        return "View your badge collection.";
+        return "View badges that you have not yet collected.";
     }
 
     @Override

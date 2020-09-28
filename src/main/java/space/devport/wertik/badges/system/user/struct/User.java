@@ -1,6 +1,7 @@
 package space.devport.wertik.badges.system.user.struct;
 
 import lombok.Getter;
+import org.jetbrains.annotations.Nullable;
 import space.devport.utils.ConsoleOutput;
 import space.devport.wertik.badges.BadgePlugin;
 import space.devport.wertik.badges.system.badge.struct.Badge;
@@ -17,10 +18,14 @@ public class User {
     @Getter
     private final UUID uniqueID;
 
-    private final Set<String> collectedBadges = new HashSet<>();
+    private final Set<CollectedBadge> collectedBadges = new HashSet<>();
 
     public User(UUID uniqueID) {
         this.uniqueID = uniqueID;
+    }
+
+    public void addBadge(Badge badge) {
+        this.collectedBadges.add(new CollectedBadge(badge.getName()));
     }
 
     public void addBadge(String name) {
@@ -29,33 +34,29 @@ public class User {
             ConsoleOutput.getInstance().warn("Attempted to assign an invalid badge to player " + uniqueID.toString() + ". Fix the badge and reload the plugin or remove it /badges purgeinvalid");
             return;
         }
-        this.collectedBadges.add(name);
-    }
-
-    public void addBadge(Badge badge) {
-        this.collectedBadges.add(badge.getName());
-    }
-
-    public void removeBadge(Badge badge) {
-        this.collectedBadges.remove(badge.getName());
+        addBadge(badge);
     }
 
     public void removeBadge(String name) {
-        this.collectedBadges.remove(name);
+        this.collectedBadges.remove(new CollectedBadge(name));
+    }
+
+    public void removeBadge(Badge badge) {
+        removeBadge(badge.getName());
     }
 
     public boolean hasBadge(String badgeName) {
-        return this.collectedBadges.contains(badgeName);
+        return this.collectedBadges.contains(new CollectedBadge(badgeName));
     }
 
     public boolean hasBadge(Badge badge) {
-        return this.collectedBadges.contains(badge.getName());
+        return hasBadge(badge.getName());
     }
 
     public int purgeInvalid() {
         AtomicInteger count = new AtomicInteger(0);
-        this.collectedBadges.removeIf((name) -> {
-            if (BadgePlugin.getInstance().getBadgeManager().getBadge(name) == null) {
+        this.collectedBadges.removeIf(collectedBadge -> {
+            if (BadgePlugin.getInstance().getBadgeManager().getBadge(collectedBadge.getBadgeName()) == null) {
                 count.incrementAndGet();
                 return true;
             }
@@ -66,19 +67,24 @@ public class User {
 
     public Set<Badge> getBadges() {
         return this.collectedBadges.stream()
-                .filter(name -> {
-                    Badge badge = BadgePlugin.getInstance().getBadgeManager().getBadge(name);
+                .filter(collectedBadge -> {
+                    Badge badge = BadgePlugin.getInstance().getBadgeManager().getBadge(collectedBadge.getBadgeName());
                     if (badge == null) {
                         ConsoleOutput.getInstance().warn("User " + uniqueID.toString() + " has an invalid badge collected. Fix the badge and reload the plugin or remove it /badges purgeinvalid");
                         return false;
                     }
                     return true;
                 })
-                .map(name -> BadgePlugin.getInstance().getBadgeManager().getBadge(name))
+                .map(collectedBadge -> BadgePlugin.getInstance().getBadgeManager().getBadge(collectedBadge.getBadgeName()))
                 .collect(Collectors.toSet());
     }
 
-    public Set<String> getCollectedBadges() {
+    @Nullable
+    public CollectedBadge getCollectedBadge(String name) {
+        return this.collectedBadges.stream().filter(b -> b.getBadgeName().equals(name)).findAny().orElse(null);
+    }
+
+    public Set<CollectedBadge> getCollectedBadges() {
         return Collections.unmodifiableSet(collectedBadges);
     }
 }

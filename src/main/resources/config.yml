@@ -4,3 +4,13 @@
 
 plugin-prefix: '&6BadgerBadges &8| '
 debug-enabled: true
+
+# Separate collection and
+separate-gui: true
+
+# Use not-collected display items?
+# When set to false, normal display item will be displayed even when the player does not have the badge collected.
+not-collected-display: true
+
+formats:
+  date: 'MM/dd/yyyy HH:mm:ss'

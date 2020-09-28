@@ -6,7 +6,7 @@ menus:
   collection:
     title: '&7Your Badge Collection'
     matrix:
-      - '         '
+      - '    b    '
       - ' xxxxxxx '
       - '         '
       - '  p c n  '
@@ -23,10 +23,44 @@ menus:
         name: '&cClose'
         type: IRON_DOOR
         matrix-char: 'c'
+      archive:
+        name: '&eBadge Archive'
+        matrix-char: 'b'
+        type: BOOK
+        lore:
+          - "&7Browse badges you don't have yet."
+  archive:
+    title: '&7Badge Archive'
+    matrix:
+      - '    b    '
+      - ' xxxxxxx '
+      - '         '
+      - '   p n  c'
+    items:
+      page-previous:
+        name: '&7<< Previous page'
+        type: ARROW
+        matrix-char: 'p'
+      page-next:
+        name: '&7Next >>'
+        type: ARROW
+        matrix-char: 'n'
+      close:
+        name: '&cClose'
+        type: IRON_DOOR
+        matrix-char: 'c'
+      collection:
+        name: '&aBadge Collection'
+        matrix-char: 'b'
+        type: BOOK
+        lore:
+          - "&7Browse badges you have."
 
 items:
   default-badge-display:
     name: '&7Badge: %displayName%'
+    lore:
+      - '&7Collected: &f%collectedDate%'
     type: WOODEN_SWORD
   default-not-collected-display:
     name: '&cBadge: %displayName%'
