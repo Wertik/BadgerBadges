@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.Nullable;
 import space.devport.utils.commands.struct.ArgumentRange;
 import space.devport.utils.commands.struct.CommandResult;
+import space.devport.utils.struct.Context;
 import space.devport.wertik.badges.BadgePlugin;
 import space.devport.wertik.badges.commands.BadgeSubCommand;
 import space.devport.wertik.badges.system.badge.struct.Badge;
@@ -24,22 +25,21 @@ public class AddSubCommand extends BadgeSubCommand {
         if (target == null)
             return CommandResult.NO_CONSOLE;
 
+        User user = plugin.getUserManager().getOrCreateUser(target.getUniqueId());
+        Context context = new Context(user).fromPlayer(target);
+
         Badge badge = plugin.getBadgeManager().getBadge(args[0]);
 
         if (badge == null) {
             language.getPrefixed("Commands.Invalid-Badge")
                     .replace("%param%", args[0])
-                    .send(sender);
+                    .send(sender, context);
             return CommandResult.FAILURE;
         }
 
-        User user = plugin.getUserManager().getOrCreateUser(target.getUniqueId());
         user.addBadge(badge);
         language.getPrefixed(target == sender ? "Commands.Add.Done" : "Commands.Add.Done-Others")
-                .replace("%badge%", badge.getName())
-                .replace("%badgeDisplay%", badge.getDisplayName())
-                .replace("%player%", target.getName())
-                .send(sender);
+                .send(sender, context.add(badge));
         return CommandResult.SUCCESS;
     }
 

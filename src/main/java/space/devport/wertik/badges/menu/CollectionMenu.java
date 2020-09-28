@@ -7,6 +7,7 @@ import space.devport.utils.menu.Menu;
 import space.devport.utils.menu.MenuBuilder;
 import space.devport.utils.menu.item.MatrixItem;
 import space.devport.utils.menu.item.MenuItem;
+import space.devport.utils.struct.Context;
 import space.devport.utils.text.Placeholders;
 import space.devport.wertik.badges.BadgePlugin;
 import space.devport.wertik.badges.system.badge.struct.Badge;
@@ -55,9 +56,7 @@ public class CollectionMenu extends Menu {
     private void build() {
         MenuBuilder menuBuilder = new MenuBuilder(plugin.getManager(CustomisationManager.class).getMenuBuilder("collection")).construct();
 
-        Placeholders placeholders = new Placeholders()
-                .add("%player%", player.getName())
-                .add("%collected%", user.getBadges().size());
+        Placeholders placeholders = new Placeholders(plugin.getGlobalPlaceholders()).addContext(player, user);
 
         menuBuilder.getTitle().parseWith(placeholders);
 
@@ -73,16 +72,12 @@ public class CollectionMenu extends Menu {
 
             ItemBuilder item = user.hasBadge(badge) || !notCollectedDisplay ? badge.getDisplayItem() : badge.getNotCollectedItem();
 
-            item.getPlaceholders()
-                    .add("%name%", badge.getName())
-                    .add("%displayName%", badge.getDisplayName());
-
-            // Date placeholder
             if (user.hasBadge(badge)) {
                 CollectedBadge collectedBadge = user.getCollectedBadge(badge.getName());
-                if (collectedBadge != null)
-                    item.getPlaceholders().add("%collectedDate%", collectedBadge.getDateFormatted());
+                placeholders.addContext(collectedBadge);
             }
+
+            item.parseWith(placeholders.addContext(badge));
 
             MenuItem menuItem = new MenuItem(item, badge.getName(), -1);
 

@@ -2,6 +2,7 @@ package space.devport.wertik.badges.system.user.struct;
 
 import lombok.Getter;
 import space.devport.wertik.badges.BadgePlugin;
+import space.devport.wertik.badges.system.badge.struct.Badge;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -21,6 +22,10 @@ public class CollectedBadge {
     public CollectedBadge(String badgeName, LocalDateTime timeStamp) {
         this.badgeName = badgeName;
         this.timeStamp = timeStamp;
+    }
+
+    public Badge getBadge() {
+        return BadgePlugin.getInstance().getBadgeManager().getBadge(this.badgeName);
     }
 
     public String getDateFormatted() {

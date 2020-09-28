@@ -35,7 +35,7 @@ menus:
       - '    b    '
       - ' xxxxxxx '
       - '         '
-      - '   p n  c'
+      - '   pcn   '
     items:
       page-previous:
         name: '&7<< Previous page'
@@ -58,10 +58,10 @@ menus:
 
 items:
   default-badge-display:
-    name: '&7Badge: %displayName%'
+    name: '&7Badge: %badgeDisplayName%'
     lore:
       - '&7Collected: &f%collectedDate%'
     type: WOODEN_SWORD
   default-not-collected-display:
-    name: '&cBadge: %displayName%'
+    name: '&cBadge: %badgeDisplayName%'
     type: BARRIER

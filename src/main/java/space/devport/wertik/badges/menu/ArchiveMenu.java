@@ -10,6 +10,7 @@ import space.devport.utils.menu.item.MenuItem;
 import space.devport.utils.text.Placeholders;
 import space.devport.wertik.badges.BadgePlugin;
 import space.devport.wertik.badges.system.badge.struct.Badge;
+import space.devport.wertik.badges.system.user.struct.CollectedBadge;
 import space.devport.wertik.badges.system.user.struct.User;
 
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class ArchiveMenu extends Menu {
         this.player = player;
         this.user = user;
 
-        this.slotsPerPage = countMatrixSlots(plugin.getManager(CustomisationManager.class).getMenuBuilder("collection").construct(), 'x');
+        this.slotsPerPage = countMatrixSlots(plugin.getManager(CustomisationManager.class).getMenuBuilder("archive").construct(), 'x');
 
         build();
     }
@@ -51,11 +52,9 @@ public class ArchiveMenu extends Menu {
     }
 
     private void build() {
-        MenuBuilder menuBuilder = new MenuBuilder(plugin.getManager(CustomisationManager.class).getMenuBuilder("collection")).construct();
+        MenuBuilder menuBuilder = new MenuBuilder(plugin.getManager(CustomisationManager.class).getMenuBuilder("archive")).construct();
 
-        Placeholders placeholders = new Placeholders()
-                .add("%player%", player.getName())
-                .add("%collected%", user.getBadges().size());
+        Placeholders placeholders = new Placeholders(plugin.getGlobalPlaceholders()).addContext(player, user);
 
         menuBuilder.getTitle().parseWith(placeholders);
 
@@ -71,9 +70,12 @@ public class ArchiveMenu extends Menu {
 
             ItemBuilder item = badge.getNotCollectedItem();
 
-            item.getPlaceholders()
-                    .add("%name%", badge.getName())
-                    .add("%displayName%", badge.getDisplayName());
+            if (user.hasBadge(badge)) {
+                CollectedBadge collectedBadge = user.getCollectedBadge(badge.getName());
+                placeholders.addContext(collectedBadge);
+            }
+
+            item.parseWith(placeholders.addContext(badge));
 
             MenuItem menuItem = new MenuItem(item, badge.getName(), -1);
 

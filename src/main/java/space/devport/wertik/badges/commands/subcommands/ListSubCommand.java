@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.Nullable;
 import space.devport.utils.commands.struct.ArgumentRange;
 import space.devport.utils.commands.struct.CommandResult;
+import space.devport.utils.struct.Context;
 import space.devport.utils.text.message.Message;
 import space.devport.wertik.badges.BadgePlugin;
 import space.devport.wertik.badges.commands.BadgeSubCommand;
@@ -27,10 +28,11 @@ public class ListSubCommand extends BadgeSubCommand {
 
         User user = plugin.getUserManager().getOrCreateUser(target.getUniqueId());
 
+        Context context = new Context(user).fromPlayer(target);
+
         if (user.getBadges().isEmpty()) {
             language.getPrefixed(target == sender ? "Commands.No-Badges" : "Commands.No-Badges-Others")
-                    .replace("%player%", target.getName())
-                    .send(sender);
+                    .send(sender, context);
             return CommandResult.FAILURE;
         }
 
@@ -39,12 +41,12 @@ public class ListSubCommand extends BadgeSubCommand {
 
         for (Badge badge : user.getBadges()) {
             list.append(new Message(lineFormat)
-                    .replace("%badgeDisplay%", badge.getDisplayName())
-                    .replace("%name%", badge.getName()).toString());
+                    .parseWith(plugin.getGlobalPlaceholders())
+                    .context(context.add(badge)));
         }
 
         list.replace("%count%", user.getBadges().size())
-                .send(sender);
+                .send(sender, context);
         return CommandResult.SUCCESS;
     }
 

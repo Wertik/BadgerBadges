@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.Nullable;
 import space.devport.utils.commands.struct.ArgumentRange;
 import space.devport.utils.commands.struct.CommandResult;
+import space.devport.utils.struct.Context;
 import space.devport.wertik.badges.BadgePlugin;
 import space.devport.wertik.badges.commands.BadgeSubCommand;
 import space.devport.wertik.badges.system.badge.struct.Badge;
@@ -23,22 +24,18 @@ public class RemoveSubCommand extends BadgeSubCommand {
         if (target == null) return CommandResult.NO_CONSOLE;
 
         User user = plugin.getUserManager().getOrCreateUser(target.getUniqueId());
+        Context context = new Context(user).fromPlayer(target);
         if (!user.hasBadge(args[0])) {
             language.getPrefixed(target == sender ? "Commands.Does-Not-Have" : "Commands.Does-Not-Have-Others")
-                    .replace("%player%", target.getName())
-                    .send(sender);
+                    .send(sender, context);
             return CommandResult.FAILURE;
         }
 
         user.removeBadge(args[0]);
 
         Badge badge = plugin.getBadgeManager().getBadge(args[0]);
-
         language.getPrefixed(sender == target ? "Commands.Remove.Done" : "Commands.Remove.Done-Others")
-                .replace("%badge%", badge.getName())
-                .replace("%badgeDisplay%", badge.getDisplayName())
-                .replace("%player%", target.getName())
-                .send(sender);
+                .send(sender, context.add(badge));
         return CommandResult.SUCCESS;
     }
 

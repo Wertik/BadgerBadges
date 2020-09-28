@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 import space.devport.utils.commands.struct.ArgumentRange;
 import space.devport.utils.commands.struct.CommandResult;
+import space.devport.utils.struct.Context;
 import space.devport.wertik.badges.BadgePlugin;
 import space.devport.wertik.badges.commands.BadgeSubCommand;
 import space.devport.wertik.badges.menu.ArchiveMenu;
@@ -33,10 +34,11 @@ public class ArchiveSubCommand extends BadgeSubCommand {
 
         User user = plugin.getUserManager().getUser(target.getUniqueId());
 
+        Context context = new Context(user).fromPlayer(target);
+
         if (user == null) {
             language.getPrefixed("Commands.No-Badges-Others")
-                    .replace("%player%", target.getName())
-                    .send(sender);
+                    .send(sender, context);
             return CommandResult.FAILURE;
         }
 

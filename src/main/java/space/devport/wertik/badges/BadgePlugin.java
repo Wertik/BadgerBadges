@@ -1,6 +1,7 @@
 package space.devport.wertik.badges;
 
 import lombok.Getter;
+import org.bukkit.entity.Player;
 import space.devport.utils.DevportPlugin;
 import space.devport.utils.UsageFlag;
 import space.devport.wertik.badges.commands.BadgeCommand;
@@ -14,7 +15,10 @@ import space.devport.wertik.badges.commands.subcommands.ReloadSubCommand;
 import space.devport.wertik.badges.commands.subcommands.RemoveSubCommand;
 import space.devport.wertik.badges.system.GsonHelper;
 import space.devport.wertik.badges.system.badge.BadgeManager;
+import space.devport.wertik.badges.system.badge.struct.Badge;
 import space.devport.wertik.badges.system.user.UserManager;
+import space.devport.wertik.badges.system.user.struct.CollectedBadge;
+import space.devport.wertik.badges.system.user.struct.User;
 
 import java.time.format.DateTimeFormatter;
 
@@ -44,6 +48,16 @@ public class BadgePlugin extends DevportPlugin {
     public void onPluginEnable() {
 
         this.gsonHelper = new GsonHelper(this);
+
+        this.getGlobalPlaceholders().addDynamicPlaceholder("%collectedDate%", CollectedBadge::getDateFormatted, CollectedBadge.class)
+                .addDynamicPlaceholder("%collectedName%", CollectedBadge::getBadgeName, CollectedBadge.class)
+                .addDynamicPlaceholder("%collectedDisplayName%", b -> b.getBadge().getDisplayName(), CollectedBadge.class)
+                .addDynamicPlaceholder("%collectedCount%", p -> {
+                    User user = BadgePlugin.getInstance().getUserManager().getOrCreateUser(p.getUniqueId());
+                    return String.valueOf(user.getCollectedBadges().size());
+                }, Player.class)
+                .addDynamicPlaceholder("%badgeName%", Badge::getName, Badge.class)
+                .addDynamicPlaceholder("%badgeDisplayName%", Badge::getDisplayName, Badge.class);
 
         userManager = new UserManager(this);
         badgeManager = new BadgeManager(this);
