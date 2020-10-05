@@ -10,10 +10,10 @@ import space.devport.utils.menu.item.MenuItem;
 import space.devport.utils.text.Placeholders;
 import space.devport.wertik.badges.BadgePlugin;
 import space.devport.wertik.badges.system.badge.struct.Badge;
-import space.devport.wertik.badges.system.user.struct.CollectedBadge;
 import space.devport.wertik.badges.system.user.struct.User;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class ArchiveMenu extends Menu {
@@ -62,20 +62,17 @@ public class ArchiveMenu extends Menu {
 
         List<Badge> badges = new ArrayList<>(plugin.getBadgeManager().getLoadedBadges().values());
 
+        badges.removeIf(user::hasBadge);
+
         for (int i = (this.page - 1) * slotsPerPage; i < badges.size() && i < slotsPerPage * this.page; i++) {
 
             Badge badge = badges.get(i);
 
-            if (user.hasBadge(badge)) continue;
-
             ItemBuilder item = badge.getNotCollectedItem();
 
-            if (user.hasBadge(badge)) {
-                CollectedBadge collectedBadge = user.getCollectedBadge(badge.getName());
-                placeholders.addContext(collectedBadge);
-            }
+            Placeholders badgePlaceholders = new Placeholders(placeholders);
 
-            item.parseWith(placeholders.addContext(badge));
+            item.parseWith(badgePlaceholders.addContext(badge));
 
             MenuItem menuItem = new MenuItem(item, badge.getName(), -1);
 
@@ -94,7 +91,7 @@ public class ArchiveMenu extends Menu {
         if (menuBuilder.getItem("close") != null)
             menuBuilder.getItem("close").setClickAction(itemClick -> close());
 
-        if (this.page < this.maxPage() && menuBuilder.getItem("page-next") != null)
+        if (this.page < this.maxPage(badges) && menuBuilder.getItem("page-next") != null)
             menuBuilder.getMatrixItem('n').getItem("page-next").setClickAction(itemClick -> {
                 incPage();
                 build();
@@ -115,8 +112,8 @@ public class ArchiveMenu extends Menu {
         setMenuBuilder(menuBuilder.construct());
     }
 
-    private int maxPage() {
-        return user.getBadges().size() / slotsPerPage;
+    private int maxPage(Collection<?> collection) {
+        return (int) Math.ceil((float) collection.size() / slotsPerPage);
     }
 
     private void incPage() {

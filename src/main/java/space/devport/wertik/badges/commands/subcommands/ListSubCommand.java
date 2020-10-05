@@ -42,7 +42,9 @@ public class ListSubCommand extends BadgeSubCommand {
         for (Badge badge : user.getBadges()) {
             list.append(new Message(lineFormat)
                     .parseWith(plugin.getGlobalPlaceholders())
-                    .context(context.add(badge)));
+                    .context(context.add(badge))
+                    .parse()
+                    .toString());
         }
 
         list.replace("%count%", user.getBadges().size())

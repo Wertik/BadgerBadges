@@ -23,12 +23,12 @@ public class BadgeLanguage extends LanguageDefaults {
         addDefault("Commands.Add.Done-Others", "&7You granted &f%player% the badge %badgeDisplayName% &7( &f%badgeName% &7)");
 
         addDefault("Commands.List.Header", "&8&m    &e Collected Badges &7( &f%collectedCount% &7)");
-        addDefault("Commands.List.Line", "&8 - %badgeDisplay% &7( &f%badgeName% &7)");
+        addDefault("Commands.List.Line", "&8 - %badgeDisplay% &7( &f%badgeName%&7, &f%collectedDate% &7)");
 
         addDefault("Commands.Purge-Invalid.Starting", "&7&oStarting...");
         addDefault("Commands.Purge-Invalid.Done", "&7Purged &f%count% &7invalid badge references.");
 
-        addDefault("Commands.Remove.Done", "&7Removed yourself the badge &f%badge%&7.");
-        addDefault("Commands.Remove.Done-Others", "&7Remove badge &f%badge% &7from &f%player%&7's collection.");
+        addDefault("Commands.Remove.Done", "&7Removed yourself the badge &f%badgeName%&7.");
+        addDefault("Commands.Remove.Done-Others", "&7Remove badge &f%badgeName% &7from &f%player%&7's collection.");
     }
 }

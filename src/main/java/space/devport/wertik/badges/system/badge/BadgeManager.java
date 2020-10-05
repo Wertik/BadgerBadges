@@ -5,7 +5,7 @@ import space.devport.wertik.badges.BadgePlugin;
 import space.devport.wertik.badges.system.badge.struct.Badge;
 
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -15,7 +15,7 @@ public class BadgeManager {
 
     private final BadgePlugin plugin;
 
-    private final Map<String, Badge> loadedBadges = new HashMap<>();
+    private final Map<String, Badge> loadedBadges = new LinkedHashMap<>();
 
     private final Configuration configuration;
 
@@ -34,8 +34,10 @@ public class BadgeManager {
 
         for (String name : configuration.getFileConfiguration().getKeys(false)) {
             Badge badge = Badge.from(configuration, name);
+
             if (badge == null)
                 continue;
+
             this.loadedBadges.put(name, badge);
             plugin.getConsoleOutput().debug("Loaded badge " + name);
         }
