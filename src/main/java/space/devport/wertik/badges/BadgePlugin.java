@@ -9,6 +9,7 @@ import space.devport.wertik.badges.commands.CommandParser;
 import space.devport.wertik.badges.commands.subcommands.AddSubCommand;
 import space.devport.wertik.badges.commands.subcommands.ArchiveSubCommand;
 import space.devport.wertik.badges.commands.subcommands.CollectionSubCommand;
+import space.devport.wertik.badges.commands.subcommands.ListBadgesSubCommand;
 import space.devport.wertik.badges.commands.subcommands.ListSubCommand;
 import space.devport.wertik.badges.commands.subcommands.PurgeInvalidSubCommand;
 import space.devport.wertik.badges.commands.subcommands.ReloadSubCommand;
@@ -78,7 +79,8 @@ public class BadgePlugin extends DevportPlugin {
                 .addSubCommand(new RemoveSubCommand(this))
                 .addSubCommand(new PurgeInvalidSubCommand(this))
                 .addSubCommand(new ListSubCommand(this))
-                .addSubCommand(new ArchiveSubCommand(this));
+                .addSubCommand(new ArchiveSubCommand(this))
+                .addSubCommand(new ListBadgesSubCommand(this));
     }
 
     private void loadOptions() {

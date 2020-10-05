@@ -25,6 +25,9 @@ public class BadgeLanguage extends LanguageDefaults {
         addDefault("Commands.List.Header", "&8&m    &e Collected Badges &7( &f%collectedCount% &7)");
         addDefault("Commands.List.Line", "&8 - %badgeDisplay% &7( &f%badgeName%&7, &f%collectedDate% &7)");
 
+        addDefault("Commands.List-Badges.Header", "&8&m    &e Badges &7( &f%count% &7)");
+        addDefault("Commands.List-Badges.Line", "&8 - &f%badgeDisplayName% &7( &f%badgeName% &7)");
+
         addDefault("Commands.Purge-Invalid.Starting", "&7&oStarting...");
         addDefault("Commands.Purge-Invalid.Done", "&7Purged &f%count% &7invalid badge references.");
 
