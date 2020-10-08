@@ -1,7 +1,9 @@
 name: ${project.name}
 main: ${project.groupId}.BadgePlugin
 version: ${project.version}
+api-version: 1.13
 authors: [ Wertik1206 ]
+softdepend: [ PlaceholderAPI ]
 commands:
   badgerbadges:
     aliases: [ bb, badge, badges, badgerbadge ]
