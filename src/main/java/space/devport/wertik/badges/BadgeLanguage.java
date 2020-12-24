@@ -22,6 +22,8 @@ public class BadgeLanguage extends LanguageDefaults {
         addDefault("Commands.Add.Done", "&7You granted yourself the badge %badgeDisplayName% &7( &f%badgeName% &7)");
         addDefault("Commands.Add.Done-Others", "&7You granted &f%player% the badge %badgeDisplayName% &7( &f%badgeName% &7)");
 
+        addDefault("Commands.Add-All.Done", "&7Added badge &f%badgeName% &7to &f%count% &7user(s).");
+
         addDefault("Commands.List.Header", "&8&m    &e Collected Badges &7( &f%collectedCount% &7)");
         addDefault("Commands.List.Line", "&8 - %badgeDisplay% &7( &f%badgeName%&7, &f%collectedDate% &7)");
 

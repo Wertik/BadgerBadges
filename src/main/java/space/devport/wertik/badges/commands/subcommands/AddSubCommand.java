@@ -32,17 +32,13 @@ public class AddSubCommand extends BadgeSubCommand {
         User user = plugin.getUserManager().getOrCreateUser(target.getUniqueId());
         Context context = new Context(user).fromPlayer(target);
 
-        Badge badge = plugin.getBadgeManager().getBadge(args[0]);
+        Badge badge = plugin.getCommandParser().parseBadge(sender, args[0], context);
 
-        if (badge == null) {
-            language.getPrefixed("Commands.Invalid-Badge")
-                    .replace("%param%", args[0])
-                    .send(sender, context);
+        if (badge == null)
             return CommandResult.FAILURE;
-        }
 
         user.addBadge(badge);
-        language.getPrefixed(target == sender ? "Commands.Add.Done" : "Commands.Add.Done-Others")
+        language.getPrefixed(sender.equals(target) ? "Commands.Add.Done" : "Commands.Add.Done-Others")
                 .send(sender, context.add(badge));
         return CommandResult.SUCCESS;
     }
