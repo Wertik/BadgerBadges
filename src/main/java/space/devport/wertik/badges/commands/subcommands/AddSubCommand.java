@@ -2,6 +2,7 @@ package space.devport.wertik.badges.commands.subcommands;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import space.devport.utils.commands.struct.ArgumentRange;
 import space.devport.utils.commands.struct.CommandResult;
@@ -47,7 +48,7 @@ public class AddSubCommand extends BadgeSubCommand {
     }
 
     @Override
-    public List<String> requestTabComplete(CommandSender sender, String[] args) {
+    public @NotNull List<String> requestTabComplete(CommandSender sender, String[] args) {
         if (args.length == 1) {
             return new ArrayList<>(plugin.getBadgeManager().getLoadedBadges().keySet());
         }

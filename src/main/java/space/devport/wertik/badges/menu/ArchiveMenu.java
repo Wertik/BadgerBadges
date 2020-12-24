@@ -27,28 +27,15 @@ public class ArchiveMenu extends Menu {
 
     private int page = 1;
 
-    public ArchiveMenu(BadgePlugin plugin, Player player) {
-        this(plugin, player, plugin.getUserManager().getOrCreateUser(player.getUniqueId()));
-    }
-
     public ArchiveMenu(BadgePlugin plugin, Player player, User user) {
         super("badges_archive_menu");
         this.plugin = plugin;
         this.player = player;
         this.user = user;
 
-        this.slotsPerPage = countMatrixSlots(plugin.getManager(CustomisationManager.class).getMenuBuilder("archive").construct(), 'x');
+        this.slotsPerPage = MenuUtil.countMatrixSlots(plugin.getManager(CustomisationManager.class).getMenuBuilder("archive").construct(), 'x');
 
         build();
-    }
-
-    private int countMatrixSlots(MenuBuilder menuBuilder, char character) {
-        int count = 0;
-        for (String line : menuBuilder.getBuildMatrix()) {
-            for (char c : line.toCharArray())
-                if (c == character) count++;
-        }
-        return count;
     }
 
     private void build() {
@@ -85,7 +72,7 @@ public class ArchiveMenu extends Menu {
 
         if (menuBuilder.getItem("collection") != null)
             menuBuilder.getItem("collection").setClickAction(itemClick -> {
-                new CollectionMenu(plugin, player).open(player);
+                new CollectionMenu(plugin, player, user).open(player);
             });
 
         if (menuBuilder.getItem("close") != null)

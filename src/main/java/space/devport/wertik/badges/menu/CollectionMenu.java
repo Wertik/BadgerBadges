@@ -39,28 +39,15 @@ public class CollectionMenu extends Menu {
         return this;
     }
 
-    public CollectionMenu(BadgePlugin plugin, Player player) {
-        this(plugin, player, plugin.getUserManager().getOrCreateUser(player.getUniqueId()));
-    }
-
     public CollectionMenu(BadgePlugin plugin, Player player, User user) {
         super("badges_collection_menu");
         this.plugin = plugin;
         this.player = player;
         this.user = user;
 
-        this.slotsPerPage = countMatrixSlots(plugin.getManager(CustomisationManager.class).getMenuBuilder("collection").construct(), 'x');
+        this.slotsPerPage = MenuUtil.countMatrixSlots(plugin.getManager(CustomisationManager.class).getMenuBuilder("collection").construct(), 'x');
 
         build();
-    }
-
-    private int countMatrixSlots(MenuBuilder menuBuilder, char character) {
-        int count = 0;
-        for (String line : menuBuilder.getBuildMatrix()) {
-            for (char c : line.toCharArray())
-                if (c == character) count++;
-        }
-        return count;
     }
 
     private void build() {
@@ -74,7 +61,8 @@ public class CollectionMenu extends Menu {
 
         List<Badge> badges = new ArrayList<>(plugin.getBadgeManager().getLoadedBadges().values());
 
-        badges.removeIf(b -> plugin.getConfig().getBoolean("separate-gui", false) && !user.hasBadge(b));
+        if (plugin.getConfig().getBoolean("separate-gui", false))
+            badges.removeIf(b -> !user.hasBadge(b));
 
         boolean notCollectedDisplay = plugin.getConfig().getBoolean("not-collected-display", true);
 
@@ -104,7 +92,7 @@ public class CollectionMenu extends Menu {
 
         if (archive && menuBuilder.getItem("archive") != null && plugin.getConfig().getBoolean("separate-gui", false))
             menuBuilder.getItem("archive").setClickAction(itemClick -> {
-                new ArchiveMenu(plugin, player).open(player);
+                new ArchiveMenu(plugin, player, user).open(player);
             });
 
         // Page control and close
