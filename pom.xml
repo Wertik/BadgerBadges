@@ -34,7 +34,6 @@
                     <compilerVersion>1.8</compilerVersion>
                     <source>8</source>
                     <target>8</target>
-                    <release>8</release>
                 </configuration>
             </plugin>
             <plugin>
@@ -81,19 +80,19 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.16.2</version>
+            <version>1.16.4</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>18.0.0</version>
+            <version>19.0.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.10</version>
+            <version>1.18.16</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
