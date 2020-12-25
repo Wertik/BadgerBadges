@@ -74,7 +74,7 @@ public class UserManager {
     }
 
     public void load() {
-        gsonHelper.loadMapAsync("user-data.json", UUID.class, User.class).thenAcceptAsync(loaded -> {
+        gsonHelper.loadMapAsync(plugin.getDataFolder().getPath() + "/user-data.json", UUID.class, User.class).thenAcceptAsync(loaded -> {
 
             if (loaded == null)
                 loaded = new HashMap<>();
@@ -115,7 +115,7 @@ public class UserManager {
 
     public void save() {
         purgeEmpty().thenRunAsync(() ->
-                gsonHelper.save(this.loadedUsers, plugin.getDataFolder() + "/user-data.json")
+                gsonHelper.save(this.loadedUsers, plugin.getDataFolder().getPath() + "/user-data.json")
                         .thenRunAsync(() -> plugin.getConsoleOutput().info("Saved " + this.loadedUsers.size() + " user(s)..."))
                         .exceptionally(e -> {
                             plugin.getConsoleOutput().err(String.format("Could not save users: %s", e.getMessage()));
