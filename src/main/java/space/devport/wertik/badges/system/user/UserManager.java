@@ -1,9 +1,10 @@
 package space.devport.wertik.badges.system.user;
 
-import com.google.gson.reflect.TypeToken;
+import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
+import space.devport.utils.utility.json.GsonHelper;
 import space.devport.wertik.badges.BadgePlugin;
-import space.devport.wertik.badges.system.GsonHelper;
 import space.devport.wertik.badges.system.user.struct.User;
 
 import java.util.*;
@@ -19,9 +20,35 @@ public class UserManager {
 
     private final Map<UUID, User> loadedUsers = new HashMap<>();
 
+    private BukkitTask autoSave;
+
     public UserManager(BadgePlugin plugin) {
         this.plugin = plugin;
-        this.gsonHelper = plugin.getGsonHelper();
+        this.gsonHelper = new GsonHelper();
+    }
+
+    public void stopAutoSave() {
+        if (autoSave == null)
+            return;
+
+        autoSave.cancel();
+        autoSave = null;
+    }
+
+    public void startAutoSave() {
+        if (autoSave != null)
+            stopAutoSave();
+
+        int interval = plugin.getConfig().getInt("auto-save.interval", 300);
+
+        this.autoSave = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, this::save, interval * 20L, interval * 20L);
+    }
+
+    public void reloadAutoSave() {
+        stopAutoSave();
+
+        if (plugin.getConfig().getBoolean("auto-save.enabled", false))
+            startAutoSave();
     }
 
     @NotNull
@@ -47,27 +74,33 @@ public class UserManager {
     }
 
     public void load() {
-        this.loadedUsers.clear();
+        gsonHelper.loadMapAsync("user-data.json", UUID.class, User.class).thenAcceptAsync(loaded -> {
 
-        Map<UUID, User> loadedData = gsonHelper.load(plugin.getDataFolder() + "/user-data.json", new TypeToken<Map<UUID, User>>() {
-        }.getType());
+            if (loaded == null)
+                loaded = new HashMap<>();
 
-        if (loadedData == null) loadedData = new HashMap<>();
+            loadedUsers.clear();
+            loadedUsers.putAll(loaded);
 
-        this.loadedUsers.putAll(loadedData);
-
-        plugin.getConsoleOutput().info("Loaded " + this.loadedUsers.size() + " user(s)...");
+            plugin.getConsoleOutput().info(String.format("Loaded %d user(s)...", loadedUsers.size()));
+        }).exceptionally(e -> {
+            plugin.getConsoleOutput().err(String.format("Could not load users: %s", e.getMessage()));
+            e.printStackTrace();
+            return null;
+        });
     }
 
-    public void purgeEmpty() {
-        int count = 0;
-        for (User user : new HashSet<>(loadedUsers.values())) {
-            if (user.getBadges().isEmpty()) {
-                deleteUser(user.getUniqueID());
-                count++;
+    public CompletableFuture<Void> purgeEmpty() {
+        return CompletableFuture.runAsync(() -> {
+            int count = 0;
+            for (User user : new HashSet<>(loadedUsers.values())) {
+                if (user.getBadges().isEmpty()) {
+                    deleteUser(user.getUniqueID());
+                    count++;
+                }
             }
-        }
-        plugin.getConsoleOutput().info("Purged " + count + " empty account(s)...");
+            plugin.getConsoleOutput().info(String.format("Purged %d empty account(s)...", count));
+        });
     }
 
     public CompletableFuture<Integer> purgeInvalid() {
@@ -81,10 +114,14 @@ public class UserManager {
     }
 
     public void save() {
-        purgeEmpty();
-
-        gsonHelper.save(this.loadedUsers, plugin.getDataFolder() + "/user-data.json");
-        plugin.getConsoleOutput().info("Saved " + this.loadedUsers.size() + " user(s)...");
+        purgeEmpty().thenRunAsync(() ->
+                gsonHelper.save(this.loadedUsers, plugin.getDataFolder() + "/user-data.json")
+                        .thenRunAsync(() -> plugin.getConsoleOutput().info("Saved " + this.loadedUsers.size() + " user(s)..."))
+                        .exceptionally(e -> {
+                            plugin.getConsoleOutput().err(String.format("Could not save users: %s", e.getMessage()));
+                            e.printStackTrace();
+                            return null;
+                        }));
     }
 
     public Collection<User> getUsers() {

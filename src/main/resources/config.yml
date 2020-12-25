@@ -12,5 +12,11 @@ separate-gui: true
 # When set to false, normal display item will be displayed even when the player does not have the badge collected.
 not-collected-display: true
 
+# Auto save settings
+auto-save:
+  enabled: true
+  # Interval in seconds
+  interval: 300
+
 formats:
   date: 'MM/dd/yyyy HH:mm:ss'

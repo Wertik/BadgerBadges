@@ -6,7 +6,6 @@ import space.devport.utils.DevportPlugin;
 import space.devport.utils.UsageFlag;
 import space.devport.wertik.badges.commands.BadgeCommand;
 import space.devport.wertik.badges.commands.CommandParser;
-import space.devport.wertik.badges.system.GsonHelper;
 import space.devport.wertik.badges.system.badge.BadgeManager;
 import space.devport.wertik.badges.system.badge.struct.Badge;
 import space.devport.wertik.badges.system.user.UserManager;
@@ -28,9 +27,6 @@ public class BadgePlugin extends DevportPlugin {
     private CommandParser commandParser;
 
     @Getter
-    private GsonHelper gsonHelper;
-
-    @Getter
     private DateTimeFormatter dateFormat;
 
     public static BadgePlugin getInstance() {
@@ -39,8 +35,6 @@ public class BadgePlugin extends DevportPlugin {
 
     @Override
     public void onPluginEnable() {
-
-        this.gsonHelper = new GsonHelper(this);
 
         // Add dynamic parsing based on context to global placeholders.
         this.getGlobalPlaceholders()
@@ -67,6 +61,8 @@ public class BadgePlugin extends DevportPlugin {
         this.commandParser = new CommandParser(this);
 
         addMainCommand(new BadgeCommand(this));
+
+        userManager.startAutoSave();
     }
 
     private void loadOptions() {
@@ -75,6 +71,7 @@ public class BadgePlugin extends DevportPlugin {
 
     @Override
     public void onPluginDisable() {
+        userManager.stopAutoSave();
         userManager.save();
     }
 
@@ -82,6 +79,8 @@ public class BadgePlugin extends DevportPlugin {
     public void onReload() {
         loadOptions();
         badgeManager.load();
+
+        userManager.reloadAutoSave();
     }
 
     @Override
