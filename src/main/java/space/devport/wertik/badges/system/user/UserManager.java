@@ -42,6 +42,7 @@ public class UserManager {
         int interval = plugin.getConfig().getInt("auto-save.interval", 300);
 
         this.autoSave = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, this::save, interval * 20L, interval * 20L);
+        plugin.getConsoleOutput().info(String.format("Started auto save with an interval of %d seconds.", interval));
     }
 
     public void reloadAutoSave() {
