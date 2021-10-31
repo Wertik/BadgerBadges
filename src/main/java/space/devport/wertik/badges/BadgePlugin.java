@@ -2,8 +2,8 @@ package space.devport.wertik.badges;
 
 import lombok.Getter;
 import org.bukkit.entity.Player;
-import space.devport.utils.DevportPlugin;
-import space.devport.utils.UsageFlag;
+import space.devport.dock.DockedPlugin;
+import space.devport.dock.UsageFlag;
 import space.devport.wertik.badges.commands.BadgeCommand;
 import space.devport.wertik.badges.commands.CommandParser;
 import space.devport.wertik.badges.system.badge.BadgeManager;
@@ -15,7 +15,9 @@ import space.devport.wertik.badges.system.user.struct.User;
 import java.time.format.DateTimeFormatter;
 
 
-public class BadgePlugin extends DevportPlugin {
+public class BadgePlugin extends DockedPlugin {
+
+    private static BadgePlugin instance;
 
     @Getter
     private BadgeManager badgeManager;
@@ -30,11 +32,12 @@ public class BadgePlugin extends DevportPlugin {
     private DateTimeFormatter dateFormat;
 
     public static BadgePlugin getInstance() {
-        return getPlugin(BadgePlugin.class);
+        return instance;
     }
 
     @Override
     public void onPluginEnable() {
+        instance = this;
 
         // Add dynamic parsing based on context to global placeholders.
         this.getGlobalPlaceholders()
@@ -60,7 +63,7 @@ public class BadgePlugin extends DevportPlugin {
 
         this.commandParser = new CommandParser(this);
 
-        addMainCommand(new BadgeCommand(this));
+        registerMainCommand(new BadgeCommand(this));
 
         userManager.startAutoSave();
     }

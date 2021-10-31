@@ -1,9 +1,10 @@
 package space.devport.wertik.badges.commands.subcommands;
 
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import space.devport.utils.commands.struct.ArgumentRange;
-import space.devport.utils.commands.struct.CommandResult;
+import space.devport.dock.commands.struct.ArgumentRange;
+import space.devport.dock.commands.struct.CommandResult;
 import space.devport.wertik.badges.BadgePlugin;
 import space.devport.wertik.badges.commands.BadgeSubCommand;
 
@@ -14,7 +15,7 @@ public class PurgeInvalidSubCommand extends BadgeSubCommand {
     }
 
     @Override
-    protected CommandResult perform(CommandSender sender, String label, String[] args) {
+    protected @NotNull CommandResult perform(@NotNull CommandSender sender, @NotNull String label, String[] args) {
         language.sendPrefixed(sender, "Commands.Purge-Invalid.Starting");
         plugin.getUserManager().purgeInvalid().thenAcceptAsync((count) ->
                 language.getPrefixed("Commands.Purge-Invalid.Done")

@@ -4,8 +4,8 @@ import com.google.common.base.Strings;
 import lombok.experimental.UtilityClass;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.Nullable;
-import space.devport.utils.struct.Context;
-import space.devport.utils.text.Placeholders;
+import space.devport.dock.struct.Context;
+import space.devport.dock.text.placeholders.Placeholders;
 import space.devport.wertik.badges.BadgePlugin;
 
 @UtilityClass
@@ -39,7 +39,7 @@ public class ParserUtil {
 
         if (str == null) return null;
 
-        return new Placeholders(BadgePlugin.getInstance().getGlobalPlaceholders())
+        return Placeholders.of(BadgePlugin.getInstance().getGlobalPlaceholders())
                 .addContext(new Context().fromPlayer(player))
                 .parse(str);
     }

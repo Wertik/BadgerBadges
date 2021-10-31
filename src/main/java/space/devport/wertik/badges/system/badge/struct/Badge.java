@@ -2,13 +2,15 @@ package space.devport.wertik.badges.system.badge.struct;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.java.Log;
 import org.bukkit.configuration.ConfigurationSection;
-import space.devport.utils.ConsoleOutput;
-import space.devport.utils.CustomisationManager;
-import space.devport.utils.configuration.Configuration;
-import space.devport.utils.item.ItemBuilder;
+import space.devport.dock.CustomisationManager;
+import space.devport.dock.configuration.Configuration;
+import space.devport.dock.item.ItemPrefab;
+import space.devport.dock.item.impl.PrefabFactory;
 import space.devport.wertik.badges.BadgePlugin;
 
+@Log
 public class Badge {
 
     @Getter
@@ -20,11 +22,11 @@ public class Badge {
 
     @Getter
     @Setter
-    private ItemBuilder displayItem;
+    private ItemPrefab displayItem;
 
     @Getter
     @Setter
-    private ItemBuilder notCollectedItem;
+    private ItemPrefab notCollectedItem;
 
     public Badge(String name) {
         this.name = name;
@@ -34,7 +36,7 @@ public class Badge {
         ConfigurationSection section = configuration.getFileConfiguration().getConfigurationSection(path);
 
         if (section == null) {
-            ConsoleOutput.getInstance().err("Could not load Badge at " + configuration.getFile().getName() + "@" + path + ", section is invalid.");
+            log.severe("Could not load Badge at " + configuration.getFile().getName() + "@" + path + ", section is invalid.");
             return null;
         }
 
@@ -46,15 +48,15 @@ public class Badge {
 
         badge.setDisplayName(displayName);
 
-        ItemBuilder defaultDisplay = BadgePlugin.getInstance().getManager(CustomisationManager.class).getItemBuilder("default-badge-display");
-        ItemBuilder displayItem = configuration.getItemBuilder(path + ".display-item", defaultDisplay);
+        ItemPrefab defaultDisplay = BadgePlugin.getInstance().getManager(CustomisationManager.class).getItem("default-badge-display");
+        ItemPrefab displayItem = configuration.getItem(path + ".display-item", defaultDisplay);
 
-        badge.setDisplayItem(new ItemBuilder(displayItem));
+        badge.setDisplayItem(PrefabFactory.of(displayItem));
 
-        ItemBuilder defaultNotCollected = BadgePlugin.getInstance().getManager(CustomisationManager.class).getItemBuilder("default-not-collected-display");
-        ItemBuilder notCollectedItem = configuration.getItemBuilder(path + ".not-collected", defaultNotCollected);
+        ItemPrefab defaultNotCollected = BadgePlugin.getInstance().getManager(CustomisationManager.class).getItem("default-not-collected-display");
+        ItemPrefab notCollectedItem = configuration.getItem(path + ".not-collected", defaultNotCollected);
 
-        badge.setNotCollectedItem(new ItemBuilder(notCollectedItem));
+        badge.setNotCollectedItem(PrefabFactory.of(notCollectedItem));
 
         return badge;
     }

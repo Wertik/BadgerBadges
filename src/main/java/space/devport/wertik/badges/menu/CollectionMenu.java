@@ -2,13 +2,13 @@ package space.devport.wertik.badges.menu;
 
 import lombok.Getter;
 import org.bukkit.entity.Player;
-import space.devport.utils.CustomisationManager;
-import space.devport.utils.item.ItemBuilder;
-import space.devport.utils.menu.Menu;
-import space.devport.utils.menu.MenuBuilder;
-import space.devport.utils.menu.item.MatrixItem;
-import space.devport.utils.menu.item.MenuItem;
-import space.devport.utils.text.Placeholders;
+import space.devport.dock.CustomisationManager;
+import space.devport.dock.item.ItemPrefab;
+import space.devport.dock.menu.Menu;
+import space.devport.dock.menu.MenuBuilder;
+import space.devport.dock.menu.item.MatrixItem;
+import space.devport.dock.menu.item.MenuItem;
+import space.devport.dock.text.placeholders.Placeholders;
 import space.devport.wertik.badges.BadgePlugin;
 import space.devport.wertik.badges.system.badge.struct.Badge;
 import space.devport.wertik.badges.system.user.struct.CollectedBadge;
@@ -16,7 +16,6 @@ import space.devport.wertik.badges.system.user.struct.User;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
 
 public class CollectionMenu extends Menu {
@@ -40,20 +39,22 @@ public class CollectionMenu extends Menu {
     }
 
     public CollectionMenu(BadgePlugin plugin, Player player, User user) {
-        super("badges_collection_menu");
+        super("badges_collection_menu", plugin);
         this.plugin = plugin;
         this.player = player;
         this.user = user;
 
-        this.slotsPerPage = MenuUtil.countMatrixSlots(plugin.getManager(CustomisationManager.class).getMenuBuilder("collection").construct(), 'x');
+        this.slotsPerPage = MenuUtil.countMatrixSlots(plugin.getManager(CustomisationManager.class).getMenu("collection").construct(), 'x');
 
         build();
     }
 
     private void build() {
-        MenuBuilder menuBuilder = new MenuBuilder(plugin.getManager(CustomisationManager.class).getMenuBuilder("collection")).construct();
+        MenuBuilder prefab = plugin.getManager(CustomisationManager.class).getMenu("collection");
 
-        Placeholders placeholders = new Placeholders(plugin.getGlobalPlaceholders()).addContext(player, user);
+        MenuBuilder menuBuilder = new MenuBuilder(prefab.getName(), prefab).construct();
+
+        Placeholders placeholders = Placeholders.of(plugin.getGlobalPlaceholders()).addContext(player, user);
 
         menuBuilder.getTitle().parseWith(placeholders);
 
@@ -70,9 +71,9 @@ public class CollectionMenu extends Menu {
 
             Badge badge = badges.get(i);
 
-            ItemBuilder item = user.hasBadge(badge) || !notCollectedDisplay ? badge.getDisplayItem() : badge.getNotCollectedItem();
+            ItemPrefab item = user.hasBadge(badge) || !notCollectedDisplay ? badge.getDisplayItem() : badge.getNotCollectedItem();
 
-            Placeholders badgePlaceholders = new Placeholders(placeholders);
+            Placeholders badgePlaceholders = Placeholders.of(placeholders);
 
             if (user.hasBadge(badge)) {
                 CollectedBadge collectedBadge = user.getCollectedBadge(badge.getName());
@@ -81,7 +82,7 @@ public class CollectionMenu extends Menu {
 
             item.parseWith(badgePlaceholders.addContext(badge));
 
-            MenuItem menuItem = new MenuItem(item, badge.getName(), -1);
+            MenuItem menuItem = new MenuItem(plugin, item, badge.getName(), -1);
 
             matrixItem.addItem(menuItem);
         }

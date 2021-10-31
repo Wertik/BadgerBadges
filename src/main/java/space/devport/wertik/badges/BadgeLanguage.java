@@ -1,11 +1,11 @@
 package space.devport.wertik.badges;
 
-import space.devport.utils.DevportPlugin;
-import space.devport.utils.text.language.LanguageDefaults;
+import space.devport.dock.DockedPlugin;
+import space.devport.dock.text.language.LanguageDefaults;
 
 public class BadgeLanguage extends LanguageDefaults {
 
-    public BadgeLanguage(DevportPlugin plugin) {
+    public BadgeLanguage(DockedPlugin plugin) {
         super(plugin);
     }
 

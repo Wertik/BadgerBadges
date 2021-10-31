@@ -1,13 +1,13 @@
 package space.devport.wertik.badges.menu;
 
 import org.bukkit.entity.Player;
-import space.devport.utils.CustomisationManager;
-import space.devport.utils.item.ItemBuilder;
-import space.devport.utils.menu.Menu;
-import space.devport.utils.menu.MenuBuilder;
-import space.devport.utils.menu.item.MatrixItem;
-import space.devport.utils.menu.item.MenuItem;
-import space.devport.utils.text.Placeholders;
+import space.devport.dock.CustomisationManager;
+import space.devport.dock.item.ItemPrefab;
+import space.devport.dock.menu.Menu;
+import space.devport.dock.menu.MenuBuilder;
+import space.devport.dock.menu.item.MatrixItem;
+import space.devport.dock.menu.item.MenuItem;
+import space.devport.dock.text.placeholders.Placeholders;
 import space.devport.wertik.badges.BadgePlugin;
 import space.devport.wertik.badges.system.badge.struct.Badge;
 import space.devport.wertik.badges.system.user.struct.User;
@@ -28,20 +28,22 @@ public class ArchiveMenu extends Menu {
     private int page = 1;
 
     public ArchiveMenu(BadgePlugin plugin, Player player, User user) {
-        super("badges_archive_menu");
+        super("badges_archive_menu", plugin);
         this.plugin = plugin;
         this.player = player;
         this.user = user;
 
-        this.slotsPerPage = MenuUtil.countMatrixSlots(plugin.getManager(CustomisationManager.class).getMenuBuilder("archive").construct(), 'x');
+        this.slotsPerPage = MenuUtil.countMatrixSlots(plugin.getManager(CustomisationManager.class).getMenu("archive").construct(), 'x');
 
         build();
     }
 
     private void build() {
-        MenuBuilder menuBuilder = new MenuBuilder(plugin.getManager(CustomisationManager.class).getMenuBuilder("archive")).construct();
+        MenuBuilder prefab = plugin.getManager(CustomisationManager.class).getMenu("archive");
 
-        Placeholders placeholders = new Placeholders(plugin.getGlobalPlaceholders()).addContext(player, user);
+        MenuBuilder menuBuilder = new MenuBuilder(prefab.getName(), prefab).construct();
+
+        Placeholders placeholders = Placeholders.of(plugin.getGlobalPlaceholders()).addContext(player, user);
 
         menuBuilder.getTitle().parseWith(placeholders);
 
@@ -55,13 +57,13 @@ public class ArchiveMenu extends Menu {
 
             Badge badge = badges.get(i);
 
-            ItemBuilder item = badge.getNotCollectedItem();
+            ItemPrefab item = badge.getNotCollectedItem();
 
-            Placeholders badgePlaceholders = new Placeholders(placeholders);
+            Placeholders badgePlaceholders = Placeholders.of(placeholders);
 
             item.parseWith(badgePlaceholders.addContext(badge));
 
-            MenuItem menuItem = new MenuItem(item, badge.getName(), -1);
+            MenuItem menuItem = new MenuItem(plugin, item, badge.getName(), -1);
 
             matrixItem.addItem(menuItem);
         }

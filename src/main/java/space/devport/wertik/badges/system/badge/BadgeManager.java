@@ -1,6 +1,7 @@
 package space.devport.wertik.badges.system.badge;
 
-import space.devport.utils.configuration.Configuration;
+import lombok.extern.java.Log;
+import space.devport.dock.configuration.Configuration;
 import space.devport.wertik.badges.BadgePlugin;
 import space.devport.wertik.badges.system.badge.struct.Badge;
 
@@ -11,6 +12,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+@Log
 public class BadgeManager {
 
     private final BadgePlugin plugin;
@@ -39,9 +41,9 @@ public class BadgeManager {
                 continue;
 
             this.loadedBadges.put(name, badge);
-            plugin.getConsoleOutput().debug("Loaded badge " + name);
+            log.fine("Loaded badge " + name);
         }
-        plugin.getConsoleOutput().info("Loaded " + this.loadedBadges.size() + " badge(s)...");
+        log.info("Loaded " + this.loadedBadges.size() + " badge(s)...");
     }
 
     public Set<Badge> getBadges(Predicate<Badge> condition) {

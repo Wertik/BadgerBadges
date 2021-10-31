@@ -4,9 +4,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import space.devport.utils.commands.struct.ArgumentRange;
-import space.devport.utils.commands.struct.CommandResult;
-import space.devport.utils.struct.Context;
+import space.devport.dock.commands.struct.ArgumentRange;
+import space.devport.dock.commands.struct.CommandResult;
+import space.devport.dock.struct.Context;
 import space.devport.wertik.badges.BadgePlugin;
 import space.devport.wertik.badges.commands.BadgeSubCommand;
 import space.devport.wertik.badges.condition.PlaceholderCondition;
@@ -23,7 +23,7 @@ public class AddAllCommand extends BadgeSubCommand {
     }
 
     @Override
-    protected CommandResult perform(CommandSender sender, String label, String[] args) {
+    protected @NotNull CommandResult perform(@NotNull CommandSender sender, @NotNull String label, String[] args) {
         Badge badge = plugin.getCommandParser().parseBadge(sender, args[0], new Context());
 
         if (badge == null)
@@ -49,7 +49,7 @@ public class AddAllCommand extends BadgeSubCommand {
     }
 
     @Override
-    public @NotNull List<String> requestTabComplete(CommandSender sender, String[] args) {
+    public @NotNull List<String> requestTabComplete(@NotNull CommandSender sender, String[] args) {
         if (args.length == 1) {
             return new ArrayList<>(plugin.getBadgeManager().getLoadedBadges().keySet());
         }

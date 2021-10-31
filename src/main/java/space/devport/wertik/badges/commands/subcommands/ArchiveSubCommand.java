@@ -4,10 +4,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import space.devport.utils.commands.struct.ArgumentRange;
-import space.devport.utils.commands.struct.CommandResult;
-import space.devport.utils.struct.Context;
+import space.devport.dock.commands.struct.ArgumentRange;
+import space.devport.dock.commands.struct.CommandResult;
 import space.devport.wertik.badges.BadgePlugin;
 import space.devport.wertik.badges.commands.BadgeSubCommand;
 import space.devport.wertik.badges.menu.ArchiveMenu;
@@ -17,11 +17,11 @@ public class ArchiveSubCommand extends BadgeSubCommand {
 
     public ArchiveSubCommand(BadgePlugin plugin) {
         super("archive", plugin);
-        this.preconditions.playerOnly();
+        this.getPreconditions().playerOnly();
     }
 
     @Override
-    protected CommandResult perform(CommandSender sender, String label, String[] args) {
+    protected @NotNull CommandResult perform(@NotNull CommandSender sender, @NotNull String label, String[] args) {
         OfflinePlayer target;
         if (args.length > 0) {
             target = Bukkit.getOfflinePlayer(args[0]);

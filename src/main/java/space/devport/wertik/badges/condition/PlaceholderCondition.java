@@ -1,15 +1,16 @@
 package space.devport.wertik.badges.condition;
 
 import com.google.common.base.Strings;
+import lombok.extern.java.Log;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import space.devport.utils.ConsoleOutput;
 import space.devport.wertik.badges.condition.operator.OperatorWrapper;
 import space.devport.wertik.badges.condition.operator.SignOperator;
 import space.devport.wertik.badges.system.user.struct.User;
 
 import java.util.function.Predicate;
 
+@Log
 public class PlaceholderCondition implements Predicate<User> {
 
     private final String condition;
@@ -42,7 +43,7 @@ public class PlaceholderCondition implements Predicate<User> {
         String[] args = condition.split(wrapper.sign());
 
         if (args.length != 2) {
-            ConsoleOutput.getInstance().warn("Invalid condition: " + this.condition);
+            log.warning("Invalid condition: " + this.condition);
             return false;
         }
 

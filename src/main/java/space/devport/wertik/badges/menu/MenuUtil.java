@@ -1,7 +1,7 @@
 package space.devport.wertik.badges.menu;
 
 import lombok.experimental.UtilityClass;
-import space.devport.utils.menu.MenuBuilder;
+import space.devport.dock.menu.MenuBuilder;
 
 @UtilityClass
 public class MenuUtil {

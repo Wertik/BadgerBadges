@@ -1,9 +1,10 @@
 package space.devport.wertik.badges.system.user;
 
+import lombok.extern.java.Log;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
-import space.devport.utils.utility.json.GsonHelper;
+import space.devport.dock.util.json.GsonHelper;
 import space.devport.wertik.badges.BadgePlugin;
 import space.devport.wertik.badges.system.user.struct.User;
 
@@ -12,6 +13,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+@Log
 public class UserManager {
 
     private final BadgePlugin plugin;
@@ -42,7 +44,7 @@ public class UserManager {
         int interval = plugin.getConfig().getInt("auto-save.interval", 300);
 
         this.autoSave = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, this::save, interval * 20L, interval * 20L);
-        plugin.getConsoleOutput().info(String.format("Started auto save with an interval of %d seconds.", interval));
+        log.info(String.format("Started auto save with an interval of %d seconds.", interval));
     }
 
     public void reloadAutoSave() {
@@ -65,13 +67,13 @@ public class UserManager {
     public User createUser(UUID uniqueID) {
         User user = new User(uniqueID);
         this.loadedUsers.put(uniqueID, user);
-        plugin.getConsoleOutput().debug("Created user " + uniqueID.toString());
+        log.fine("Created user " + uniqueID.toString());
         return user;
     }
 
     public void deleteUser(UUID uniqueID) {
         this.loadedUsers.remove(uniqueID);
-        plugin.getConsoleOutput().debug("Deleted user " + uniqueID.toString());
+        log.fine("Deleted user " + uniqueID.toString());
     }
 
     public void load() {
@@ -83,9 +85,9 @@ public class UserManager {
             loadedUsers.clear();
             loadedUsers.putAll(loaded);
 
-            plugin.getConsoleOutput().info(String.format("Loaded %d user(s)...", loadedUsers.size()));
+            log.fine(String.format("Loaded %d user(s)...", loadedUsers.size()));
         }).exceptionally(e -> {
-            plugin.getConsoleOutput().err(String.format("Could not load users: %s", e.getMessage()));
+            log.severe(String.format("Could not load users: %s", e.getMessage()));
             e.printStackTrace();
             return null;
         });
@@ -100,7 +102,7 @@ public class UserManager {
                     count++;
                 }
             }
-            plugin.getConsoleOutput().info(String.format("Purged %d empty account(s)...", count));
+            log.info(String.format("Purged %d empty account(s)...", count));
         });
     }
 
@@ -115,14 +117,14 @@ public class UserManager {
     }
 
     public void save() {
-        purgeEmpty().thenRunAsync(() ->
-                gsonHelper.save(this.loadedUsers, plugin.getDataFolder().getPath() + "/user-data.json")
-                        .thenRunAsync(() -> plugin.getConsoleOutput().info("Saved " + this.loadedUsers.size() + " user(s)..."))
-                        .exceptionally(e -> {
-                            plugin.getConsoleOutput().err(String.format("Could not save users: %s", e.getMessage()));
-                            e.printStackTrace();
-                            return null;
-                        }));
+        purgeEmpty().thenRunAsync(() -> {
+            gsonHelper.save(plugin.getDataFolder().getPath() + "/user-data.json", this.loadedUsers).ifFailed(e -> {
+                log.severe("Failed to save users.");
+                e.printStackTrace();
+            }).ifPresent((unused) -> {
+                log.info("Saved " + this.loadedUsers.size() + " user(s)...");
+            });
+        });
     }
 
     public Collection<User> getUsers() {

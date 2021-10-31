@@ -6,9 +6,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import space.devport.utils.commands.struct.ArgumentRange;
-import space.devport.utils.commands.struct.CommandResult;
-import space.devport.utils.struct.Context;
+import space.devport.dock.commands.struct.ArgumentRange;
+import space.devport.dock.commands.struct.CommandResult;
+import space.devport.dock.struct.Context;
 import space.devport.wertik.badges.BadgePlugin;
 import space.devport.wertik.badges.commands.BadgeSubCommand;
 import space.devport.wertik.badges.system.badge.struct.Badge;
@@ -25,7 +25,7 @@ public class RemoveSubCommand extends BadgeSubCommand {
     }
 
     @Override
-    protected CommandResult perform(CommandSender sender, String label, String[] args) {
+    protected @NotNull CommandResult perform(@NotNull CommandSender sender, @NotNull String label, String[] args) {
         OfflinePlayer target = plugin.getCommandParser().parseTarget(sender, args.length > 1 ? args[0] : null);
 
         if (target == null) return CommandResult.NO_CONSOLE;
@@ -48,7 +48,7 @@ public class RemoveSubCommand extends BadgeSubCommand {
     }
 
     @Override
-    public @NotNull List<String> requestTabComplete(CommandSender sender, String[] args) {
+    public @NotNull List<String> requestTabComplete(@NotNull CommandSender sender, String[] args) {
         if (args.length == 1) {
             return new ArrayList<>(plugin.getBadgeManager().getLoadedBadges().keySet());
         } else if (args.length == 2) {

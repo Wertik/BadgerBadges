@@ -1,8 +1,8 @@
 package space.devport.wertik.badges.system.user.struct;
 
 import lombok.Getter;
+import lombok.extern.java.Log;
 import org.jetbrains.annotations.Nullable;
-import space.devport.utils.ConsoleOutput;
 import space.devport.wertik.badges.BadgePlugin;
 import space.devport.wertik.badges.system.badge.struct.Badge;
 
@@ -13,6 +13,7 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+@Log
 public class User {
 
     @Getter
@@ -31,7 +32,7 @@ public class User {
     public void addBadge(String name) {
         Badge badge = BadgePlugin.getInstance().getBadgeManager().getBadge(name);
         if (badge == null) {
-            ConsoleOutput.getInstance().warn("Attempted to assign an invalid badge to player " + uniqueID.toString() + ". Fix the badge and reload the plugin or remove it /badges purgeinvalid");
+            log.warning("Attempted to assign an invalid badge to player " + uniqueID.toString() + ". Fix the badge and reload the plugin or remove it /badges purgeinvalid");
             return;
         }
         addBadge(badge);
@@ -70,7 +71,7 @@ public class User {
                 .filter(collectedBadge -> {
                     Badge badge = BadgePlugin.getInstance().getBadgeManager().getBadge(collectedBadge.getBadgeName());
                     if (badge == null) {
-                        ConsoleOutput.getInstance().warn("User " + uniqueID.toString() + " has an invalid badge collected. Fix the badge and reload the plugin or remove it /badges purgeinvalid");
+                        log.warning("User " + uniqueID.toString() + " has an invalid badge collected. Fix the badge and reload the plugin or remove it /badges purgeinvalid");
                         return false;
                     }
                     return true;
